@@ -3,6 +3,7 @@ package com.artantech.unipdsspring.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,43 +36,59 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Map<String, Product> getProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<Map<String, Product>> getProducts() {
+        if (productService.getAllProducts().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/products/sort")
-    public Map<String, Product> getOrderedProducts(@RequestParam(name = "order", required = false) String order) {
-        return productService.getAllOrderedProducts(order);
+    public ResponseEntity<Map<String, Product>> getOrderedProducts(
+            @RequestParam(name = "order", required = false) String order) {
+        if (productService.getAllOrderedProducts(order).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productService.getAllOrderedProducts(order));
     }
 
     @GetMapping("/products/{id}")
-    public Product getProduct(@PathVariable String id) {
-        return productService.getProduct(id);
+    public ResponseEntity<Product> getProduct(@PathVariable String id) {
+        if (productService.getProduct(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @PostMapping("/product")
-    public String addNewProduct(@RequestBody Product p) {
+    public ResponseEntity<String> addNewProduct(@RequestBody Product p) {
         System.out.println("New Product received.");
         System.out.println(
                 p.getId() + "/" + p.getName() + "/");
-        return "New Product add.";
+        return ResponseEntity.ok("New Product add.");
     }
 
     @PostMapping("/products")
-    public Product addProduct(@RequestBody Product p) {
-        return productService.addProduct(p);
+    public ResponseEntity<Product> addProduct(@RequestBody Product p) {
+        return ResponseEntity.ok(productService.addProduct(p));
     }
 
     @PutMapping("/products/{id}")
-    public Product updateProduct(@PathVariable String id, @RequestBody Product p) {
-        return productService.updateProduct(id, p);
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product p) {
+        if (productService.getProduct(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productService.updateProduct(id, p));
     }
 
     @DeleteMapping("/products/{id}")
-    public String removeProduct(@PathVariable String id) {
+    public ResponseEntity<String> removeProduct(@PathVariable String id) {
+        if (productService.getProduct(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
         System.out.println("Product remove request received.");
         productService.removeProduct(id);
-        return "Product removed.";
+        return ResponseEntity.ok("Product removed.");
     }
 
 }

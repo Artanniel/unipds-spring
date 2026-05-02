@@ -74,5 +74,4 @@ public class ProductService {
                                 LinkedHashMap::new // ← preserva a ordem após sort
                         ));
     }
-
 }
