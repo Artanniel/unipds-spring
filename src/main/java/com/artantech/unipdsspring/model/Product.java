@@ -1,4 +1,4 @@
-package com.artantech.unipdsspring.aula01.model;
+package com.artantech.unipdsspring.model;
 
 public class Product {
 
