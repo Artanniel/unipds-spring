@@ -1,11 +1,26 @@
 package com.artantech.unipdsspring.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+
+@Entity
+@Table(name = "product")
 public class Product {
 
+    @Id
     private String id;
+
+    @Column(nullable = false)
     private String name;
+
     private String description;
+
+    @Column(nullable = false)
     private double price;
+
+    @Column(nullable = false)
     private int quantity;
 
     public Product() {
