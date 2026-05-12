@@ -3,9 +3,9 @@ package com.artantech.unipdsspring.repository;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.artantech.unipdsspring.model.Conference;
+import com.artantech.unipdsspring.model.Transaction;
 
 @Repository
-public interface ConferenceRepo extends ListCrudRepository<Conference, Integer> {
+public interface TransactionRepo extends ListCrudRepository<Transaction, Integer> {
 
 }
