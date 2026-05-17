@@ -1,41 +1,63 @@
 package com.artantech.unipdsspring.security;
 
 import java.nio.charset.StandardCharsets;
-
+import java.sql.Date;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.Objects;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import com.artantech.unipdsspring.model.User;
+
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.NotNull;
 
 public class TokenUtil {
+
+    private static final String EMISSOR = "ArtannielFortes";
+    private static final String SECRET_KEY = "secret-key-super-secreto-nao-colocar-em-producao";
+    private static final long EXPIRATION_TIME = 60 * 60 * 1000; // 1 hora
+
+    public static String encode(User user) {
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+            return Jwts.builder()
+                    .subject(user.getUsername())
+                    .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                    .issuer(EMISSOR)
+                    .signWith(key)
+                    .compact();
+        } catch (Exception e) {
+            throw new RuntimeException("Token generation failed");
+        }
+    }
+
     public static Authentication decode(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        System.out.println("Request authHeader: " + authHeader);
-        if (Objects.nonNull(authHeader)) {
-            String[] tokenList = authHeader.split(" ");
-
-            System.out.println("Type: " + tokenList[0] + ", Token: " + tokenList[1]);
-            if (tokenList[0].equalsIgnoreCase("basic")) {
-
-            } else if (tokenList[0].equalsIgnoreCase("bearer")) {
-                if (tokenList[1].equals("security123")) {
-                    System.out.println("Valid token!");
-                    return new UsernamePasswordAuthenticationToken("valido", null, Collections.emptyList());
-                } else {
-                    System.out.println("Invalid token!");
-                    return null;
-                }
-
-            }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
         }
 
-        return null;
+        String token = authHeader.substring(7);
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+            String username = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+
+            return new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+        } catch (JwtException e) {
+            return null;
+        }
     }
 
     /**

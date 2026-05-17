@@ -2,7 +2,10 @@ package com.artantech.unipdsspring.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.artantech.unipdsspring.model.User;
+import com.artantech.unipdsspring.security.MyToken;
 
 public interface IUserService {
 
@@ -13,4 +16,6 @@ public interface IUserService {
     List<User> getAllUsers();
 
     User getByEmail(String email);
+
+    public MyToken loginUser(User user);
 }
