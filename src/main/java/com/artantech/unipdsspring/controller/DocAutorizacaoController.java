@@ -55,4 +55,5 @@ public class DocAutorizacaoController {
     private String generateKey() {
         return UUID.randomUUID().toString();
     }
+
 }

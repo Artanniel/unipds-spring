@@ -81,4 +81,5 @@ public class TokenUtil {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedText);
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
+
 }
