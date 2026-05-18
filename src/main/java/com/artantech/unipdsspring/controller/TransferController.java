@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.artantech.unipdsspring.model.Transaction;
-import com.artantech.unipdsspring.model.TransferDTO;
+import com.artantech.unipdsspring.model.dto.TransferDTO;
 import com.artantech.unipdsspring.service.ITransferService;
 
 @RestController

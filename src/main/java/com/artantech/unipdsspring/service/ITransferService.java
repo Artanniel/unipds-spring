@@ -1,7 +1,7 @@
 package com.artantech.unipdsspring.service;
 
 import com.artantech.unipdsspring.model.Transaction;
-import com.artantech.unipdsspring.model.TransferDTO;
+import com.artantech.unipdsspring.model.dto.TransferDTO;
 
 public interface ITransferService {
 

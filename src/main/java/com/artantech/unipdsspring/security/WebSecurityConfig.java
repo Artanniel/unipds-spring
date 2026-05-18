@@ -12,23 +12,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.GET, "/open").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/restricted").authenticated())
-                .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class)
-        /*
-         * .formLogin((form) -> form
-         * .loginPage("/login")
-         * .permitAll())
-         */;
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests((authz) -> authz
+                                                // ── Página de login (recurso estático público) ──
+                                                .requestMatchers(HttpMethod.GET, "/login", "/login/",
+                                                                "/login/index.html")
+                                                .permitAll()
+                                                // ── Endpoints públicos de autenticação ──
+                                                .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/user/oauth/google").permitAll()
+                                                // ── Autorização fiscal ──
+                                                .requestMatchers(HttpMethod.POST, "/api/v1/autorizacao/solicitar").permitAll()
+                                                // ── API interna (chamada via WebClient entre serviços) ──
+                                                .requestMatchers(HttpMethod.GET, "/lazy-api/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/lazy-api/**").permitAll()
+                                                // ── Recursos estáticos (JS, CSS, fontes, imagens) ──
+                                                .requestMatchers(HttpMethod.GET, "/open").permitAll()
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/css/**", "/js/**", "/images/**", "/fonts/**",
+                                                                "/*.ico", "/*.png", "/*.svg")
+                                                .permitAll()
+                                                // ── Swagger / OpenAPI ──
+                                                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**",
+                                                                "/swagger-ui.html")
+                                                .permitAll()
+                                                // ── Tudo mais exige autenticação ──
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class);
+                return http.build();
+        }
 }

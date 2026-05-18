@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.artantech.unipdsspring.events.InvalidAccountException;
 import com.artantech.unipdsspring.model.Account;
 import com.artantech.unipdsspring.model.Transaction;
-import com.artantech.unipdsspring.model.TransferDTO;
+import com.artantech.unipdsspring.model.dto.TransferDTO;
 import com.artantech.unipdsspring.repository.AccountRepo;
 import com.artantech.unipdsspring.repository.TransactionRepo;
 
