@@ -49,10 +49,12 @@ public class DocAutorizacaoController {
         doc.setCodigoServico(req.idServico());
         doc.setDataHora(LocalDateTime.now());
         doc.setChaveAutorizacao(generateKey());
+
         return ResponseEntity.ok(doc);
     }
 
     private String generateKey() {
         return UUID.randomUUID().toString();
     }
+
 }

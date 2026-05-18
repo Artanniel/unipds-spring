@@ -18,4 +18,5 @@ public interface IUserService {
     User getByEmail(String email);
 
     public MyToken loginUser(User user);
+
 }

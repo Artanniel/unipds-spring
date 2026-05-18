@@ -74,6 +74,7 @@ public class TokenUtil {
     /**
      * Base64 decodes the given encoded string.
      *
+     * 
      * @param encodedText String to be decoded.
      * @return Decoded (plain) string.
      */
@@ -81,4 +82,5 @@ public class TokenUtil {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedText);
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
+
 }
