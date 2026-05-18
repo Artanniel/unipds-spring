@@ -49,6 +49,7 @@ public class DocAutorizacaoController {
         doc.setCodigoServico(req.idServico());
         doc.setDataHora(LocalDateTime.now());
         doc.setChaveAutorizacao(generateKey());
+
         return ResponseEntity.ok(doc);
     }
 
